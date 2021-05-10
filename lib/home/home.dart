@@ -1,47 +1,43 @@
-import 'package:flutter/material.dart';
+import 'dart:convert';
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
-  final String title;
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+
+class Home extends StatefulWidget {
+  const Home({Key key}) : super(key: key);
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _HomeState createState() => _HomeState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+class _HomeState extends State<Home> {
 
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
+  String _search;
+
+  int _offset = 0;
+
+  Future<Map> _getGifs() async {
+    http.Response response;
+
+    if(_search == null)
+      response = await http.get(Uri.parse("https://api.giphy.com/v1/gifs/trending?api_key=puPAIAMWM8n1VwYNhUjfgPHQoI31ggXv&limit=20&rating=g"));
+    else
+      response = await http.get(Uri.parse("https://api.giphy.com/v1/gifs/search?api_key=puPAIAMWM8n1VwYNhUjfgPHQoI31ggXv&q=$_search&limit=20&offset=$_offset&rating=g&lang=en"));
+
+    return json.decode(response.body);
+  }
+
+  @override
+  void initState(){
+    super.initState();
+
+    _getGifs().then((map) {
+      print(map);
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
-    );
+    return Container();
   }
 }
