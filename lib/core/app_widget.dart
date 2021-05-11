@@ -8,6 +8,7 @@ class AppWidget extends StatelessWidget {
     return MaterialApp(
       title: 'Buscador de gifs',
       home: Home(),
+      theme: ThemeData(hintColor: Colors.white),
     );
   }
 }
